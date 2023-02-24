@@ -22,7 +22,7 @@ import {
   Box,
   extendTheme,
   Fab,
-  Icon
+  AddIcon
 } from 'native-base';
 import NativeBaseIcon from './src/components/NativeBaseIcon';
 
@@ -94,17 +94,15 @@ const theme = extendTheme({
   },
 });
 
-// const addButton = () => {
-//   return <Box position="relative" w="100%" h={200}>
-//     <Fab right={70} bottom={50} icon= {
-//         <Icon color="white" as= {
-//             <AntDesign name="plus" />
-//           } />
-//       } 
-//     />
-//   </Box>;
-// };
+const AddButton = () => {
+  return <Fab renderInPortal={false} colorScheme="secondary" shadow={2} size="sm" icon={<AddIcon size = "4" color="primary.400"/>} />
+};
 
+const AppBar = () => {
+  return <>
+    <Box safeAreaTop bg="secondary.400" />
+  </>
+}
 
 const App = () => {
   return (
@@ -137,6 +135,7 @@ const App = () => {
           <ToggleDarkMode />
         </VStack>
       </Center>
+      <AddButton/>
     </NativeBaseProvider>
   );
 };
