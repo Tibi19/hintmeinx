@@ -22,7 +22,9 @@ import {
   Box,
   extendTheme,
   Fab,
-  AddIcon
+  AddIcon,
+  AlertDialog,
+  Button
 } from 'native-base';
 import NativeBaseIcon from './src/components/NativeBaseIcon';
 
@@ -118,13 +120,21 @@ const config = {
   },
 };
 
-const AddButton = () => {
+interface AddButtonProps {
+  isAddOpen: boolean,
+  setIsAddOpen: (isOpen: boolean) => void
+}
+const AddButton = ({isAddOpen, setIsAddOpen}: AddButtonProps) => {
   return <Fab
     renderInPortal={false}
     colorScheme="secondary"
     shadow={2}
     size="sm"
-    onPress={() => console.log("asd")}
+    onPress={() => {
+      console.log("is currently open? " + isAddOpen)
+      setIsAddOpen(true)
+      console.log("and now? " + isAddOpen)
+    }}
     icon={
       <AddIcon
         size="4"
@@ -149,7 +159,38 @@ const AppBar = () => {
   </>
 }
 
+interface AddHintDialogProps {
+  isOpen: boolean,
+  onClose: () => void,
+  cancelRef: React.MutableRefObject<null>
+}
+const AddHintDialog = ({ isOpen, onClose, cancelRef }: AddHintDialogProps) => {
+  return <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
+    <AlertDialog.Content>
+      <AlertDialog.CloseButton />
+      <AlertDialog.Header>Add a Hint</AlertDialog.Header>
+      <AlertDialog.Body>
+        Placeholder body
+      </AlertDialog.Body>
+      <AlertDialog.Footer>
+        <Button.Group space={2}>
+          <Button colorScheme="secondary" onPress={onClose} ref={cancelRef} color="black">
+            CANCEL
+          </Button>
+          <Button colorScheme="secondary" onPress={onClose}>
+            SUBMIT
+          </Button>
+        </Button.Group>
+      </AlertDialog.Footer>
+    </AlertDialog.Content>
+  </AlertDialog>
+}
+
 const App = () => {
+  const [isAddOpen, setIsAddOpen] = React.useState(false)
+  const onCloseAdd = () => setIsAddOpen(false)
+  const cancelRef = React.useRef(null)
+
   return (
     <NativeBaseProvider config={config} theme={theme}>
       <AppBar />
@@ -181,7 +222,8 @@ const App = () => {
           <ToggleDarkMode />
         </VStack>
       </Center>
-      <AddButton/>
+      <AddHintDialog isOpen={isAddOpen} onClose={() => onCloseAdd()} cancelRef={cancelRef}/>
+      <AddButton isAddOpen={isAddOpen} setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)}/>
     </NativeBaseProvider>
   );
 };
