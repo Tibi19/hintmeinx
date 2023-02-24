@@ -89,24 +89,70 @@ const theme = extendTheme({
       "darkText": "#181818",
     }
   },
+  fontConfig: {
+    Roboto: {
+      100: {normal: "roboto_light"},
+      200: {normal: "roboto_light"},
+      300: {normal: "roboto_light"},
+      400: {normal: "roboto"},
+      500: {normal: "roboto_medium"},
+      600: {normal: "roboto_medium"},
+      700: {normal: 'roboto_bold'},
+      800: {normal: 'roboto_bold'},
+      900: {normal: 'roboto_bold'}
+    }
+  },
+  fonts: {
+    heading: "Roboto",
+    body: "Roboto",
+    mono: "Roboto",
+  },
   config: {
     initialColorMode: 'dark',
-  },
+  }
 });
 
+const config = {
+  dependencies: {
+    'linear-gradient': require('react-native-linear-gradient').default,
+  },
+};
+
 const AddButton = () => {
-  return <Fab renderInPortal={false} colorScheme="secondary" shadow={2} size="sm" icon={<AddIcon size = "4" color="primary.400"/>} />
+  return <Fab
+    renderInPortal={false}
+    colorScheme="secondary"
+    shadow={2}
+    size="sm"
+    onPress={() => console.log("asd")}
+    icon={
+      <AddIcon
+        size="4"
+        color="primary.400" />
+    }
+  />
 };
 
 const AppBar = () => {
   return <>
-    <Box safeAreaTop bg="secondary.400" />
+    <Box safeAreaTop bg={{
+      linearGradient: {
+        colors: ['secondary.400', 'tertiary.400'],
+        start: [0.2, 0],
+        end: [1.2, 0]
+      }
+    }} alignItems="center">
+      <Text color="white" fontSize="30" mt="3" mb="3">
+        Hint Me In!
+      </Text>
+    </Box>
   </>
 }
 
 const App = () => {
   return (
-    <NativeBaseProvider theme={theme}>
+    <NativeBaseProvider config={config} theme={theme}>
+      <AppBar />
       <Center
         _dark={{ bg: 'blueGray.900' }}
         _light={{ bg: 'blueGray.50' }}
