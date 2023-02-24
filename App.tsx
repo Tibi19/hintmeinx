@@ -24,7 +24,9 @@ import {
   Fab,
   AddIcon,
   AlertDialog,
-  Button
+  Button,
+  FormControl,
+  Input
 } from 'native-base';
 import NativeBaseIcon from './src/components/NativeBaseIcon';
 
@@ -121,20 +123,15 @@ const config = {
 };
 
 interface AddButtonProps {
-  isAddOpen: boolean,
   setIsAddOpen: (isOpen: boolean) => void
 }
-const AddButton = ({isAddOpen, setIsAddOpen}: AddButtonProps) => {
+const AddButton = ({setIsAddOpen}: AddButtonProps) => {
   return <Fab
     renderInPortal={false}
     colorScheme="secondary"
     shadow={2}
     size="sm"
-    onPress={() => {
-      console.log("is currently open? " + isAddOpen)
-      setIsAddOpen(true)
-      console.log("and now? " + isAddOpen)
-    }}
+    onPress={() => {setIsAddOpen(true)}}
     icon={
       <AddIcon
         size="4"
@@ -159,29 +156,49 @@ const AppBar = () => {
   </>
 }
 
+interface Hint {
+  domain: string,
+  username: string,
+  hintText: string
+}
 interface AddHintDialogProps {
   isOpen: boolean,
   onClose: () => void,
+  onSubmitHint: (hint: Hint) => void,
   cancelRef: React.MutableRefObject<null>
 }
-const AddHintDialog = ({ isOpen, onClose, cancelRef }: AddHintDialogProps) => {
+const AddHintDialog = ({ isOpen, onClose, onSubmitHint, cancelRef }: AddHintDialogProps) => {
+  const [domain, setDomain] = React.useState("")
+  const [username, setUsername] = React.useState("")
+  const [hintText, setHintText] = React.useState("")
+
+  const onSubmit = () => {
+    onSubmitHint({domain, username, hintText})
+    setDomain("")
+    setUsername("")
+    setHintText("")
+    onClose()
+  }
+
   return <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
     <AlertDialog.Content>
       <AlertDialog.CloseButton />
       <AlertDialog.Header>Add a Hint</AlertDialog.Header>
       <AlertDialog.Body>
-        Placeholder body
+        <VStack width="90%" alignItems="center">
+          <Input variant="underlined" placeholder="Domain" value={domain} onChangeText={text => setDomain(text)}/>
+          <Input variant="underlined" placeholder="Username" value={username} onChangeText={text => setUsername(text)} />
+          <Input variant="underlined" placeholder="Hint" value={hintText} onChangeText={text => setHintText(text)} />
+          <Button.Group space={4} mt="5">
+            <Button colorScheme="secondary" onPress={onClose} ref={cancelRef} color="black">
+              <Text color="black">CANCEL</Text>
+            </Button>
+            <Button colorScheme="secondary" onPress={onSubmit}>
+              <Text color="black">SUBMIT</Text>
+            </Button>
+          </Button.Group>
+        </VStack>
       </AlertDialog.Body>
-      <AlertDialog.Footer>
-        <Button.Group space={2}>
-          <Button colorScheme="secondary" onPress={onClose} ref={cancelRef} color="black">
-            CANCEL
-          </Button>
-          <Button colorScheme="secondary" onPress={onClose}>
-            SUBMIT
-          </Button>
-        </Button.Group>
-      </AlertDialog.Footer>
     </AlertDialog.Content>
   </AlertDialog>
 }
@@ -190,6 +207,10 @@ const App = () => {
   const [isAddOpen, setIsAddOpen] = React.useState(false)
   const onCloseAdd = () => setIsAddOpen(false)
   const cancelRef = React.useRef(null)
+
+  const submitHint = (hint: Hint) => {
+    console.log("hint with domain: " + hint.domain + " user: " + hint.username + " text: " + hint.hintText)
+  } 
 
   return (
     <NativeBaseProvider config={config} theme={theme}>
@@ -222,8 +243,8 @@ const App = () => {
           <ToggleDarkMode />
         </VStack>
       </Center>
-      <AddHintDialog isOpen={isAddOpen} onClose={() => onCloseAdd()} cancelRef={cancelRef}/>
-      <AddButton isAddOpen={isAddOpen} setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)}/>
+      <AddHintDialog isOpen={isAddOpen} onClose={() => onCloseAdd()} onSubmitHint={hint => submitHint(hint)} cancelRef={cancelRef}/>
+      <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)}/>
     </NativeBaseProvider>
   );
 };
