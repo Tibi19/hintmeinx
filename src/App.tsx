@@ -10,18 +10,14 @@
 
 import React from 'react';
 import {
-  Link,
-  Text,
-  HStack,
-  Center,
-  Heading,
-  Switch,
-  useColorMode,
   NativeBaseProvider,
-  VStack,
-  Box
+  FlatList,
+  Box,
+  Menu,
+  Text,
+  Pressable,
+  HamburgerIcon
 } from 'native-base';
-import NativeBaseIcon from './components/NativeBaseIcon';
 import config from './config/config';
 import theme from './config/theme';
 import AppBar from './components/AppBar';
@@ -29,24 +25,8 @@ import AddHintDialog from './components/AddHintDialog';
 import AddButton from './components/AddButton';
 import { Hint } from './model/model';
 import { useLocalStorage } from './hook/useLocalStorage';
-
-// Color Switch Component`
-function ToggleDarkMode() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  return (
-    <HStack space={2} alignItems="center">
-      <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === 'light'}
-        onToggle={toggleColorMode}
-        aria-label={
-          colorMode === 'light' ? 'switch to dark mode' : 'switch to light mode'
-        }
-      />
-      <Text>Light</Text>
-    </HStack>
-  );
-}
+import HintRow from './components/HintRow';
+import { MenuProvider } from 'react-native-popup-menu';
 
 const App = () => {
   const [hints, setHints] = useLocalStorage<Hint[]>("hints", [])
@@ -60,38 +40,22 @@ const App = () => {
 
   return (
     <NativeBaseProvider config={config} theme={theme}>
+    <MenuProvider>
+
       <AppBar />
-      <Text color="black">{ hints.map(hint => hint.domain).join(" ") }</Text>
-      <Center
-        _dark={{ bg: 'blueGray.900' }}
-        _light={{ bg: 'blueGray.50' }}
-        px={4}
-        flex={1}>
-        <VStack space={5} alignItems="center">
-          <NativeBaseIcon />
-          <Heading size="lg">Welcome to NativeBase</Heading>
-          <HStack space={2} alignItems="center">
-            <Text>Edit</Text>
-            <Box
-              px={2}
-              py={1}
-              _dark={{ bg: "blueGray.800" }}
-              _light={{ bg: "blueGray.200" }}
-            >
-              App.js
-            </Box>
-            <Text>and save to reload.</Text>
-          </HStack>
-          <Link href="https://docs.nativebase.io" isExternal>
-            <Text color="primary.500" underline fontSize={'xl'}>
-              Learn NativeBase
-            </Text>
-          </Link>
-          <ToggleDarkMode />
-        </VStack>
-      </Center>
+      <Box bg="singletons.black" height="100%" >
+        <FlatList 
+            data={hints} 
+            renderItem={ ({ item }) => HintRow(item) }
+            keyExtractor={ item => item.id }
+            py="2"
+            contentContainerStyle={{ paddingBottom: 150 }}
+          />
+        </Box>
       <AddHintDialog isOpen={isAddOpen} onClose={() => onCloseAdd()} onSubmitHint={hint => submitHint(hint)} cancelRef={cancelRef} />
       <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)} />
+    
+    </MenuProvider>
     </NativeBaseProvider>
   );
 };

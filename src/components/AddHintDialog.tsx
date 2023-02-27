@@ -30,9 +30,9 @@ const AddHintDialog = ({ isOpen, onClose, onSubmitHint, cancelRef }: AddHintDial
             <AlertDialog.Header>Add a Hint</AlertDialog.Header>
             <AlertDialog.Body>
                 <VStack width="90%" alignItems="center">
-                    <Input variant="underlined" placeholder="Domain" value={domain} onChangeText={text => setDomain(text)} />
-                    <Input variant="underlined" placeholder="Username" value={username} onChangeText={text => setUsername(text)} />
-                    <Input variant="underlined" placeholder="Hint" value={hintText} onChangeText={text => setHintText(text)} />
+                    <Input fontSize="15" variant="underlined" placeholder="Domain" value={domain} onChangeText={text => setDomain(text)} />
+                    <Input fontSize="15" variant="underlined" placeholder="Username" value={username} onChangeText={text => setUsername(text)} />
+                    <Input fontSize="15" variant="underlined" placeholder="Hint" value={hintText} onChangeText={text => setHintText(text)} />
                     <Button.Group space={4} mt="5">
                         <Button colorScheme="secondary" onPress={onClose} ref={cancelRef} color="black">
                             <Text color="black">CANCEL</Text>
