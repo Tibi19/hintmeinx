@@ -28,6 +28,7 @@ import AppBar from './components/AppBar';
 import AddHintDialog from './components/AddHintDialog';
 import AddButton from './components/AddButton';
 import { Hint } from './model/model';
+import { useLocalStorage } from './hook/useLocalStorage';
 
 // Color Switch Component`
 function ToggleDarkMode() {
@@ -48,17 +49,19 @@ function ToggleDarkMode() {
 }
 
 const App = () => {
+  const [hints, setHints] = useLocalStorage<Hint[]>("hints", [])
+  const submitHint = (hint: Hint) => {
+    setHints(current => [...current, hint])
+  }
+
   const [isAddOpen, setIsAddOpen] = React.useState(false)
   const onCloseAdd = () => setIsAddOpen(false)
   const cancelRef = React.useRef(null)
 
-  const submitHint = (hint: Hint) => {
-    console.log("hint with domain: " + hint.domain + " user: " + hint.username + " text: " + hint.hintText)
-  }
-
   return (
     <NativeBaseProvider config={config} theme={theme}>
       <AppBar />
+      <Text color="black">{ hints.map(hint => hint.domain).join(" ") }</Text>
       <Center
         _dark={{ bg: 'blueGray.900' }}
         _light={{ bg: 'blueGray.50' }}
