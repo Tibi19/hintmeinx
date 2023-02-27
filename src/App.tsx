@@ -12,11 +12,7 @@ import React from 'react';
 import {
   NativeBaseProvider,
   FlatList,
-  Box,
-  Menu,
-  Text,
-  Pressable,
-  HamburgerIcon
+  Box
 } from 'native-base';
 import config from './config/config';
 import theme from './config/theme';

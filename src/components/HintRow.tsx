@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, HStack, Text, VStack } from "native-base"
 import { Hint } from "../model/model"
-import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu'
+import { Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
 
 interface HintRowProps {
     hint: Hint,
@@ -26,7 +26,7 @@ const HintRow = (hint: Hint) => {
 
 const HintMenu = () => {
     return (
-        <Menu renderer={renderers.NotAnimatedContextMenu}>
+        <Menu>
             <MenuTrigger>
                 <Text
                     fontSize="21"
