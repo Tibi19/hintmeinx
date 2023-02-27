@@ -1,6 +1,8 @@
 import { AlertDialog, Button, Input, Text, VStack } from "native-base"
 import React from "react"
 import { Hint } from "../model/model"
+import 'react-native-get-random-values'
+import { nanoid } from 'nanoid'
 
 interface AddHintDialogProps {
     isOpen: boolean,
@@ -15,7 +17,7 @@ const AddHintDialog = ({ isOpen, onClose, onSubmitHint, cancelRef }: AddHintDial
     const [hintText, setHintText] = React.useState("")
 
     const onSubmit = () => {
-        onSubmitHint({ domain, username, hintText })
+        onSubmitHint({ id: nanoid(), domain, username, hintText })
         setDomain("")
         setUsername("")
         setHintText("")
