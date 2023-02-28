@@ -26,8 +26,24 @@ import { MenuProvider } from 'react-native-popup-menu';
 
 const App = () => {
   const [hints, setHints] = useLocalStorage<Hint[]>("hints", [])
-  const submitHint = (hint: Hint) => {
+  const addHint = (hint: Hint) => {
     setHints(current => [...current, hint])
+  }
+  const editHint = (newHint: Hint) => {
+    setHints(current => {
+      const newHints = current.map(hint => {
+        if(hint.id === newHint.id) {
+          return newHint
+        }
+        return hint
+      })
+      return newHints
+    })
+  }
+  const deleteHint = (hintId: string) => {
+    setHints(current => {
+      return current.filter(hint => hint.id !== hintId)
+    })
   }
 
   const [isAddOpen, setIsAddOpen] = React.useState(false)
@@ -36,22 +52,31 @@ const App = () => {
 
   return (
     <NativeBaseProvider config={config} theme={theme}>
-    <MenuProvider>
+      <MenuProvider>
 
-      <AppBar />
-      <Box bg="singletons.black" height="100%" >
-        <FlatList 
-            data={hints} 
-            renderItem={ ({ item }) => HintRow(item) }
-            keyExtractor={ item => item.id }
+        <AppBar />
+        <Box bg="singletons.black" height="100%" >
+          <FlatList
+            data={hints}
+            renderItem={({ item }) =>
+              <HintRow
+                hint={item}
+                onEditHint={newHint => editHint(newHint)}
+                onDeleteHint={() => deleteHint(item.id)}
+              />}
+            keyExtractor={item => item.id}
             py="2"
             contentContainerStyle={{ paddingBottom: 150 }}
           />
         </Box>
-      <AddHintDialog isOpen={isAddOpen} onClose={() => onCloseAdd()} onSubmitHint={hint => submitHint(hint)} cancelRef={cancelRef} />
-      <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)} />
-    
-    </MenuProvider>
+        <AddHintDialog
+          isOpen={isAddOpen}
+          onClose={() => onCloseAdd()}
+          onSubmitHint={hint => addHint(hint)}
+          cancelRef={cancelRef} />
+        <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)} />
+
+      </MenuProvider>
     </NativeBaseProvider>
   );
 };

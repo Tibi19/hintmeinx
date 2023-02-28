@@ -1,45 +1,46 @@
-import { AlertDialog, Button, Input, Text, TextArea, VStack } from "native-base"
-import React from "react"
+import React from 'react'
+import { AlertDialog, Button, Input, Text, VStack } from "native-base"
 import { Hint } from "../model/model"
-import 'react-native-get-random-values'
-import { nanoid } from 'nanoid'
 
-interface AddHintDialogProps {
+interface EditHintDialogProps {
     isOpen: boolean,
+    hint: Hint,
     onClose: () => void,
-    onSubmitHint: (hint: Hint) => void,
+    onEditHint: (newHint: Hint) => void,
     cancelRef: React.MutableRefObject<null>
 }
 
-const AddHintDialog = ({ isOpen, onClose, onSubmitHint, cancelRef }: AddHintDialogProps) => {
-    const [domain, setDomain] = React.useState("")
-    const [username, setUsername] = React.useState("")
-    const [hintText, setHintText] = React.useState("")
+const EditHintDialog = ({ isOpen, hint, onClose, onEditHint, cancelRef }: EditHintDialogProps) => {
+    const [domain, setDomain] = React.useState(hint.domain)
+    const [username, setUsername] = React.useState(hint.username)
+    const [hintText, setHintText] = React.useState(hint.hintText)
 
-    const onCloseDialog = () => {
-        setDomain("")
-        setUsername("")
-        setHintText("")
+    const onCancelDialog = () => {
+        setDomain(hint.domain)
+        setUsername(hint.username)
+        setHintText(hint.hintText)
         onClose()
     }
-    const onSubmit = () => {
-        onSubmitHint({ id: nanoid(), domain, username, hintText })
+    const onEdit = () => {
+        const id = hint.id
+        onEditHint({id, domain, username, hintText})
+        onClose()
     }
 
-    return <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCloseDialog}>
+    return <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCancelDialog}>
         <AlertDialog.Content>
             <AlertDialog.CloseButton />
-            <AlertDialog.Header>Add a Hint</AlertDialog.Header>
+            <AlertDialog.Header>Edit Hint</AlertDialog.Header>
             <AlertDialog.Body alignItems="center">
                 <VStack width="90%" alignItems="center">
                     <Input fontSize="15" variant="underlined" placeholder="Domain" value={domain} onChangeText={text => setDomain(text)} />
                     <Input fontSize="15" variant="underlined" placeholder="Username" value={username} onChangeText={text => setUsername(text)} />
                     <Input multiline fontSize="15" variant="underlined" placeholder="Hint" value={hintText} onChangeText={text => setHintText(text)} />
                     <Button.Group space={4} mt="5">
-                        <Button colorScheme="secondary" onPress={onCloseDialog} ref={cancelRef} color="black">
+                        <Button colorScheme="secondary" onPress={onCancelDialog} ref={cancelRef} color="black">
                             <Text color="black">CANCEL</Text>
                         </Button>
-                        <Button colorScheme="secondary" onPress={onSubmit}>
+                        <Button colorScheme="secondary" onPress={onEdit}>
                             <Text color="black">SUBMIT</Text>
                         </Button>
                     </Button.Group>
@@ -49,4 +50,4 @@ const AddHintDialog = ({ isOpen, onClose, onSubmitHint, cancelRef }: AddHintDial
     </AlertDialog>
 }
 
-export default AddHintDialog
+export default EditHintDialog
