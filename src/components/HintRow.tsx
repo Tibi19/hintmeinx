@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, HStack, Text, VStack } from "native-base"
+import { Box, HStack, Pressable, Text, VStack } from "native-base"
 import { Hint } from "../model/model"
 import { Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
 import EditHintDialog from './EditHintDialog'
@@ -18,23 +18,35 @@ const HintRow = ({hint, onEditHint, onDeleteHint}: HintRowProps) => {
     const cancelRef = React.useRef(null)
 
     return <>
-        <Box alignSelf="flex-start" rounded="lg" bg="primary.400" my="2" mx="4" pl="5" pr="2" py="3">
-            <HStack>
-                <VStack mr="5" space={2}>
-                    <Text fontSize="18">{hint.domain}</Text>
-                    <Text fontSize="18">{hint.username}</Text>
-                </VStack>
-                <HintMenu 
-                    hint={hint} 
-                    onEditHint={newHint => onEditHint(newHint)} 
-                    onDeleteHint={() => onDeleteHint()} />
-            </HStack>
-        </Box>
-        <HintDialog 
-            isOpen={isHintOpen} 
-            onClose={() => onCloseHint()} 
-            hintText={hint.hintText} 
-            cancelRef={cancelRef}/>
+        <Pressable onPress={() => setIsHintOpen(true)} my="2" mx="4" alignSelf="flex-start">
+            {({ isPressed }) => {
+                return (
+                    <Box
+                        rounded="lg"
+                        bg="primary.400"
+                        pl="5"
+                        pr="2"
+                        py="3"
+                        style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}>
+                        <HStack>
+                            <VStack mr="5" space={2}>
+                                <Text fontSize="18">{hint.domain}</Text>
+                                <Text fontSize="18">{hint.username}</Text>
+                            </VStack>
+                            <HintMenu
+                                hint={hint}
+                                onEditHint={newHint => onEditHint(newHint)}
+                                onDeleteHint={() => onDeleteHint()} />
+                        </HStack>
+                    </Box>
+                )
+            }}
+        </Pressable>
+        <HintDialog
+            isOpen={isHintOpen}
+            onClose={() => onCloseHint()}
+            hint={hint}
+            cancelRef={cancelRef} />
     </>
 }
 
