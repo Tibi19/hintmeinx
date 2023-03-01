@@ -17,7 +17,7 @@ import {
 import config from './config/config';
 import theme from './config/theme';
 import AppBar from './components/AppBar';
-import AddHintDialog from './components/AddHintDialog';
+import AddHintDialog from './components/dialog/AddHintDialog';
 import AddButton from './components/AddButton';
 import { Hint } from './model/model';
 import { useLocalStorage } from './hook/useLocalStorage';
@@ -72,8 +72,7 @@ const App = () => {
         <AddHintDialog
           isOpen={isAddOpen}
           onClose={() => onCloseAdd()}
-          onSubmitHint={hint => addHint(hint)}
-          cancelRef={cancelRef} />
+          onSubmitHint={hint => addHint(hint)} />
         <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)} />
 
       </MenuProvider>

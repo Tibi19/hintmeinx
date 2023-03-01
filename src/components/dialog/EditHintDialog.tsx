@@ -1,16 +1,14 @@
 import React from 'react'
-import { AlertDialog, Button, Input, Text, VStack } from "native-base"
-import { Hint } from "../model/model"
+import { Button, Input, Text, VStack } from "native-base"
+import { Hint } from "../../model/model"
+import Dialog, { DialogControlProps } from './Dialog'
 
-interface EditHintDialogProps {
-    isOpen: boolean,
+interface EditHintDialogProps extends DialogControlProps {
     hint: Hint,
-    onClose: () => void,
-    onEditHint: (newHint: Hint) => void,
-    cancelRef: React.MutableRefObject<null>
+    onEditHint: (newHint: Hint) => void
 }
 
-const EditHintDialog = ({ isOpen, hint, onClose, onEditHint, cancelRef }: EditHintDialogProps) => {
+const EditHintDialog = ({ isOpen, hint, onClose, onEditHint }: EditHintDialogProps) => {
     const [domain, setDomain] = React.useState(hint.domain)
     const [username, setUsername] = React.useState(hint.username)
     const [hintText, setHintText] = React.useState(hint.hintText)
@@ -27,17 +25,19 @@ const EditHintDialog = ({ isOpen, hint, onClose, onEditHint, cancelRef }: EditHi
         onClose()
     }
 
-    return <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCancelDialog}>
-        <AlertDialog.Content>
-            <AlertDialog.CloseButton />
-            <AlertDialog.Header>Edit Hint</AlertDialog.Header>
-            <AlertDialog.Body alignItems="center">
-                <VStack width="90%" alignItems="center">
+    return (
+        <Dialog 
+            title="Edit Hint" 
+            isOpen={isOpen} 
+            onClose={onCancelDialog}
+            alignChildren="center"
+            >
+            <VStack width="90%" alignItems="center">
                     <Input fontSize="15" variant="underlined" placeholder="Domain" value={domain} onChangeText={text => setDomain(text)} />
                     <Input fontSize="15" variant="underlined" placeholder="Username" value={username} onChangeText={text => setUsername(text)} />
                     <Input multiline fontSize="15" variant="underlined" placeholder="Hint" value={hintText} onChangeText={text => setHintText(text)} />
                     <Button.Group space={4} mt="5">
-                        <Button colorScheme="secondary" onPress={onCancelDialog} ref={cancelRef} color="black">
+                        <Button colorScheme="secondary" onPress={onCancelDialog} color="black">
                             <Text color="black">CANCEL</Text>
                         </Button>
                         <Button colorScheme="secondary" onPress={onEdit}>
@@ -45,9 +45,8 @@ const EditHintDialog = ({ isOpen, hint, onClose, onEditHint, cancelRef }: EditHi
                         </Button>
                     </Button.Group>
                 </VStack>
-            </AlertDialog.Body>
-        </AlertDialog.Content>
-    </AlertDialog>
+        </Dialog>
+    )
 }
 
 export default EditHintDialog

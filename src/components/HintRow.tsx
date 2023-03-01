@@ -2,9 +2,9 @@ import React from 'react'
 import { Box, HStack, Pressable, Text, VStack } from "native-base"
 import { Hint } from "../model/model"
 import { Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
-import EditHintDialog from './EditHintDialog'
-import DeleteHintDialog from './DeleteHintDialog'
-import HintDialog from './HintDialog'
+import EditHintDialog from './dialog/EditHintDialog'
+import DeleteHintDialog from './dialog/DeleteHintDialog'
+import HintDialog from './dialog/HintDialog'
 
 interface HintRowProps {
     hint: Hint,
@@ -15,7 +15,6 @@ interface HintRowProps {
 const HintRow = ({hint, onEditHint, onDeleteHint}: HintRowProps) => {
     const [isHintOpen, setIsHintOpen] = React.useState(false)
     const onCloseHint = () => setIsHintOpen(false)
-    const cancelRef = React.useRef(null)
 
     return <>
         <Pressable onPress={() => setIsHintOpen(true)} my="2" mx="4" alignSelf="flex-start">
@@ -45,8 +44,7 @@ const HintRow = ({hint, onEditHint, onDeleteHint}: HintRowProps) => {
         <HintDialog
             isOpen={isHintOpen}
             onClose={() => onCloseHint()}
-            hint={hint}
-            cancelRef={cancelRef} />
+            hint={hint} />
     </>
 }
 
@@ -61,7 +59,6 @@ const HintMenu = ({hint, onEditHint, onDeleteHint}: HintMenuProps) => {
     const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
     const onCloseEdit = () => setIsEditOpen(false)
     const onCloseDelete = () => setIsDeleteOpen(false)
-    const cancelRef = React.useRef(null)
 
     return <>
         <Menu>
@@ -98,14 +95,12 @@ const HintMenu = ({hint, onEditHint, onDeleteHint}: HintMenuProps) => {
             isOpen = {isEditOpen}
             onClose = {() => onCloseEdit()}
             onEditHint = {newHint => onEditHint(newHint)}
-            cancelRef = {cancelRef}
         />
         <DeleteHintDialog 
             hint = {hint}
             isOpen = {isDeleteOpen}
             onClose = {() => onCloseDelete()}
             onDelete = {() => onDeleteHint()}
-            cancelRef = {cancelRef}
         />
     </>
 }
