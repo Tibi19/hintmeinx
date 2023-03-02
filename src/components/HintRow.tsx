@@ -2,26 +2,21 @@ import React from 'react'
 import { Box, HStack, Pressable, Text, VStack } from "native-base"
 import { Hint } from "../model/model"
 import { Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
-import EditHintDialog from './dialog/EditHintDialog'
-import DeleteHintDialog from './dialog/DeleteHintDialog'
-import HintDialog from './dialog/HintDialog'
 
 interface HintRowProps {
     hint: Hint,
-    onEditHint: (newHint: Hint) => void,
-    onDeleteHint: () => void,
+    onOpenHint: () => void,
+    onOpenEdit: () => void,
+    onOpenDelete: () => void,
 }
 
-const HintRow = ({hint, onEditHint, onDeleteHint}: HintRowProps) => {
-    const [isHintOpen, setIsHintOpen] = React.useState(false)
-    const onCloseHint = () => setIsHintOpen(false)
-
+const HintRow = ({hint, onOpenHint, onOpenEdit, onOpenDelete}: HintRowProps) => {
     return <>
-        <Pressable onPress={() => setIsHintOpen(true)} my="2" mx="4" alignSelf="flex-start">
+        <Pressable onPress={onOpenHint} my="2" mx="4" alignSelf="flex-start">
             {({ isPressed }) => {
                 return (
                     <Box
-                        rounded="lg"
+                        rounded="2xl"
                         bg="primary.400"
                         pl="5"
                         pr="2"
@@ -33,33 +28,23 @@ const HintRow = ({hint, onEditHint, onDeleteHint}: HintRowProps) => {
                                 <Text fontSize="18">{hint.username}</Text>
                             </VStack>
                             <HintMenu
-                                hint={hint}
-                                onEditHint={newHint => onEditHint(newHint)}
-                                onDeleteHint={() => onDeleteHint()} />
+                                onOpenEdit={onOpenEdit}
+                                onOpenDelete={onOpenDelete} />
                         </HStack>
                     </Box>
                 )
             }}
         </Pressable>
-        <HintDialog
-            isOpen={isHintOpen}
-            onClose={() => onCloseHint()}
-            hint={hint} />
+        
     </>
 }
 
 interface HintMenuProps {
-    hint: Hint,
-    onEditHint: (newHint: Hint) => void,
-    onDeleteHint: () => void,
+    onOpenEdit: () => void,
+    onOpenDelete: () => void,
 }
 
-const HintMenu = ({hint, onEditHint, onDeleteHint}: HintMenuProps) => {
-    const [isEditOpen, setIsEditOpen] = React.useState(false)
-    const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
-    const onCloseEdit = () => setIsEditOpen(false)
-    const onCloseDelete = () => setIsDeleteOpen(false)
-
+const HintMenu = ({onOpenEdit, onOpenDelete}: HintMenuProps) => {
     return <>
         <Menu>
             <MenuTrigger>
@@ -72,36 +57,25 @@ const HintMenu = ({hint, onEditHint, onDeleteHint}: HintMenuProps) => {
             <MenuOptions customStyles={{
                 optionsContainer: {
                     backgroundColor: '#39404d',
-                    borderRadius: 10,
+                    borderRadius: 15,
                     padding: 5,
                     marginTop: 25,
                     width: 100
                   }
             }}>
-                <MenuOption onSelect={() => setIsEditOpen(true)} >
+                <MenuOption onSelect={onOpenEdit} >
                     <Text fontSize="16">
                         Edit
                     </Text>
                 </MenuOption>
-                <MenuOption onSelect={() => setIsDeleteOpen(true)} >
+                <MenuOption onSelect={onOpenDelete} >
                     <Text fontSize="16">
                         Delete
                     </Text>
                 </MenuOption>
             </MenuOptions>
         </Menu>
-        <EditHintDialog 
-            hint = {hint}
-            isOpen = {isEditOpen}
-            onClose = {() => onCloseEdit()}
-            onEditHint = {newHint => onEditHint(newHint)}
-        />
-        <DeleteHintDialog 
-            hint = {hint}
-            isOpen = {isDeleteOpen}
-            onClose = {() => onCloseDelete()}
-            onDelete = {() => onDeleteHint()}
-        />
+        
     </>
 }
 

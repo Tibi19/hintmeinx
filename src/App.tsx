@@ -1,7 +1,4 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
  * Generated with the TypeScript template
  * https://github.com/react-native-community/react-native-template-typescript
  *
@@ -23,6 +20,8 @@ import { Hint } from './model/model';
 import { useLocalStorage } from './hook/useLocalStorage';
 import HintRow from './components/HintRow';
 import { MenuProvider } from 'react-native-popup-menu';
+import HintInstanceDialogs from './components/dialog/HintInstanceDialogs';
+import { StatusBar } from 'react-native';
 
 const App = () => {
   const [hints, setHints] = useLocalStorage<Hint[]>("hints", [])
@@ -47,31 +46,59 @@ const App = () => {
   }
 
   const [isAddOpen, setIsAddOpen] = React.useState(false)
-  const onCloseAdd = () => setIsAddOpen(false)
+  const [isHintOpen, setIsHintOpen] = React.useState(false)
+  const [isEditOpen, setIsEditOpen] = React.useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
+  const [hintForDialog, setHintForDialog] = React.useState<Hint>({id: "", domain: "", username: "", hintText: ""})
+  const openDialog = (hint: Hint, openDialogByState: () => void) => {
+    setHintForDialog(hint)
+    openDialogByState()
+  }
+  const isAnyDialogOpen = () => isHintOpen || isEditOpen || isDeleteOpen
+
+  StatusBar.setBackgroundColor(theme.colors.primary[400])
 
   return (
     <NativeBaseProvider config={config} theme={theme}>
       <MenuProvider>
 
         <AppBar />
+
         <Box bg="singletons.black" height="100%" >
           <FlatList
             data={hints}
             renderItem={({ item }) =>
               <HintRow
                 hint={item}
-                onEditHint={newHint => editHint(newHint)}
-                onDeleteHint={() => deleteHint(item.id)}
+                onOpenHint={() => openDialog(item, () => setIsHintOpen(true))}
+                onOpenEdit={() => openDialog(item, () => setIsEditOpen(true))}
+                onOpenDelete={() => openDialog(item, () => setIsDeleteOpen(true))}
               />}
             keyExtractor={item => item.id}
             py="2"
             contentContainerStyle={{ paddingBottom: 155 }}
           />
         </Box>
+
+        {isAnyDialogOpen() &&
+          <HintInstanceDialogs
+            hint={hintForDialog}
+            isHintOpen={isHintOpen}
+            isEditOpen={isEditOpen}
+            isDeleteOpen={isDeleteOpen}
+            onCloseHint={() => setIsHintOpen(false)}
+            onCloseEdit={() => setIsEditOpen(false)}
+            onCloseDelete={() => setIsDeleteOpen(false)}
+            onEditHint={newHint => editHint(newHint)}
+            onDeleteHint={() => deleteHint(hintForDialog.id)}
+          />
+        }
+
         <AddHintDialog
           isOpen={isAddOpen}
-          onClose={() => onCloseAdd()}
+          onClose={() => setIsAddOpen(false)}
           onSubmitHint={hint => addHint(hint)} />
+
         <AddButton setIsAddOpen={(isOpen) => setIsAddOpen(isOpen)} />
 
       </MenuProvider>
