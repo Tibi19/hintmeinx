@@ -48,7 +48,6 @@ const App = () => {
 
   const [isAddOpen, setIsAddOpen] = React.useState(false)
   const onCloseAdd = () => setIsAddOpen(false)
-  const cancelRef = React.useRef(null)
 
   return (
     <NativeBaseProvider config={config} theme={theme}>
@@ -66,7 +65,7 @@ const App = () => {
               />}
             keyExtractor={item => item.id}
             py="2"
-            contentContainerStyle={{ paddingBottom: 150 }}
+            contentContainerStyle={{ paddingBottom: 155 }}
           />
         </Box>
         <AddHintDialog
