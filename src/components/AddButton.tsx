@@ -10,7 +10,7 @@ const AddButton = ({ setIsAddOpen }: AddButtonProps) => {
         renderInPortal={false}
         colorScheme="secondary"
         shadow={2}
-        size="sm"
+        size="lg"
         onPress={() => { setIsAddOpen(true) }}
         icon={
             <AddIcon

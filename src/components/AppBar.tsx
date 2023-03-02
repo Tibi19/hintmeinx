@@ -5,8 +5,8 @@ const AppBar = () => {
     return <Box safeAreaTop bg={{
         linearGradient: {
             colors: ['secondary.400', 'tertiary.400'],
-            start: [0.2, 0],
-            end: [1.2, 0]
+            start: [0.1, 0],
+            end: [1.0, 0]
         }
     }} alignItems="center">
         <Text color="white" fontSize="30" mt="3" mb="3">
