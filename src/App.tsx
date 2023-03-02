@@ -22,6 +22,7 @@ import HintRow from './components/HintRow';
 import { MenuProvider } from 'react-native-popup-menu';
 import HintInstanceDialogs from './components/dialog/HintInstanceDialogs';
 import { StatusBar } from 'react-native';
+import ExportButton from './components/ExportButton';
 
 const App = () => {
   const [hints, setHints] = useLocalStorage<Hint[]>("hints", [])
@@ -74,9 +75,10 @@ const App = () => {
                 onOpenEdit={() => openDialog(item, () => setIsEditOpen(true))}
                 onOpenDelete={() => openDialog(item, () => setIsDeleteOpen(true))}
               />}
+            ListFooterComponent={ <ExportButton hints={hints}/> }
             keyExtractor={item => item.id}
             py="2"
-            contentContainerStyle={{ paddingBottom: 155 }}
+            contentContainerStyle={{ paddingBottom: 100 }}
           />
         </Box>
 
